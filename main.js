@@ -81,6 +81,15 @@ function handleFileUpload(files) {
 
 				LOADED_FILES[file.name] = contents
 				updateOwnedSubs()
+			} else if (file.name == 'gamesession.xml') {
+				var string = contents.toString('utf-8')
+				// strip the header - is causing errors
+				var xmlData = $.parseXML(string.substring(`<?xml version="1.0" encoding="utf-8"?>\n`.length))
+				GAMESESSION = $(xmlData).find('Gamesession')
+				loadGameSession()
+				console.log('Updated gamesession.xml')
+			} else {
+				return window.alert(`File extention not recognized.`)
 			}
 		})
 	)
@@ -168,6 +177,19 @@ function generateSubFileMap() {
 	console.log('Mapped submarine names correctly.')
 }
 
+// download gamesession.xml
+$('#downloadGamesession').on('click', () => {
+	// gamesession.xml  - add stripped header
+	let gameses_string = `<?xml version="1.0" encoding="utf-8"?>\n` + GAMESESSION.prop('outerHTML')
+	var blob = new Blob([gameses_string], { type: 'application/xml' })
+	var blobUrl = URL.createObjectURL(blob)
+
+	var a = document.createElement('a')
+	a.href = blobUrl
+	a.download = 'gamesession.xml'
+	a.click()
+})
+
 // #endregion files handling
 
 // get data from gamesession
@@ -182,10 +204,11 @@ function loadGameSession() {
 
 	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
 
-	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine.')
+	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine. Drag gamesession.xml to replace currently loaded one.')
 	$('#tools').show()
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
+	$('#moneyInput').val(CAMPAIGN.attr('money'))
 	updateAvalSubs()
 	updateOwnedSubs()
 }
@@ -278,7 +301,7 @@ function updateOwnedSubs() {
 			download.on('click', () => {
 				let filename = SUBFILEMAP[name]
 				let contents = LOADED_FILES[filename]
-				
+
 				var blob = new Blob([contents], { type: 'application/gzip' })
 				var blobUrl = URL.createObjectURL(blob)
 
@@ -290,5 +313,11 @@ function updateOwnedSubs() {
 		})
 }
 // #endregion owned submarines list
+
+$('#moneyConfirm').on('click', () => {
+	let money = $('#moneyInput').val()
+	CAMPAIGN.attr('money', money)
+	console.log(`Set current money to ${money}`)
+})
 
 // #endregion tools

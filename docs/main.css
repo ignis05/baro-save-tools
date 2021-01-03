@@ -117,6 +117,7 @@ body {
 #loadedInfo .infoWrapper {
 	display: flex;
 	justify-content: flex-start;
+	overflow-x: auto;
 }
 
 #loadedInfo .title {
@@ -244,7 +245,7 @@ body {
 	margin-left: 10px;
 }
 
-#availableSubs .adderWrapper {
+.adderWrapper {
 	padding-top: 10px;
 	width: 100%;
 	margin: 0;
@@ -260,4 +261,30 @@ body {
 #addToAvalSubsButton {
 	color: #bb86fc;
 	cursor: pointer;
+}
+
+.gamesesDownloadWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.gamesesDownloadWrapper img {
+	margin-left: 20px;
+}
+
+#moneyConfirm {
+	cursor: pointer;
+	color: #bb86fc;
+}
+
+.optionWrapper:nth-child(n + 3) {
+	border-top: 1px solid white;
+	margin-top: 10px;
+	padding-top: 10px;
+}
+
+#otherOptions .adderWrapper {
+	padding-top: 0px;
 }

@@ -21,4 +21,10 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 -  remove submarine from the list using "X" button
 -  add submarine to the list by typing its name below and pressing "Add"
 
+### Other tools
+
+- download gamesession.xml
+- drag edited gamesession.xml to dropzone to update loaded one
+- set current money
+
 <hr>
