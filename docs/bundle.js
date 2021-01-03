@@ -14077,10 +14077,10 @@ $('#fileLocHelp').on('click', () => {
 	var close = $(`<div id=closeInfoBox>X</div>`)
 	var textWrapper = $(`<div class="text"></div>`)
 	textWrapper.html(`
-	<h3>Saves can be found in your local AppData folder. To get there you can:</h3><ul>
-	<li>Navigate full path:<br><span class="highlight">C:\\Users\\[username]\\AppData\\Local\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
-	<li>Paste this in your file explorator navigation bar:<br><span class="highlight">%localappdata%\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
-	<li>Press Win+R, type <span class="highlight">%localappdata%</span> and navigate from there</li>
+	<h3>Savefiles location depends on your operating system:</h3><ul>
+	<li>Windows - <span class="highlight">C:\\Users\\%username%\\AppData\\Local\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
+	<br><li>Linux - <span class="highlight">/home/$USER/.local/share/Daedalic Entertainment GmbH/</span></li>
+	<br><li>macOS - <span class="highlight">/$USER/Library/Application Support/Daedalic Entertainment GmbH/</span></li>
 	</ul>
 	`)
 	infobox.append(close).append(textWrapper)
