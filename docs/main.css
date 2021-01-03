@@ -17,6 +17,32 @@ body {
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 	display: flex;
 	flex-direction: column;
+	position: relative;
+}
+
+#root > #link {
+	position: absolute;
+	top: -20px;
+	right: -20px;
+	border: 1px solid white;
+	display: block;
+	border-radius: 0 0 0 5px;
+	padding: 2px;
+	font-size: 0.7em;
+	opacity: 0.5;
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+}
+
+#root > #link:hover {
+	color: #bb86fc;
+	border-color: #bb86fc;
+}
+
+#root > #link:visited {
+	color: inherit;
+	text-decoration: none;
 }
 
 #header {
@@ -94,110 +120,6 @@ body {
 	color: #03dac6;
 }
 
-#submarineTools {
-	border-bottom: 2px solid white;
-	display: flex;
-	flex-direction: column;
-}
-
-#submarineTools .title {
-	font-size: 2em;
-	text-align: center;
-}
-
-#submarineTools .toolSection {
-	margin: 0;
-	padding: 10px;
-	margin-bottom: 20px;
-	display: flex;
-	flex-direction: row;
-}
-
-.toolWrapper {
-	background: #ffffff0c;
-	border-radius: 10px;
-	padding: 10px;
-	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-}
-
-.toolWrapper .label {
-	font-size: 20px;
-	margin-bottom: 5px;
-	text-align: center;
-}
-
-.toolWrapper .tool {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
-}
-
-.toolWrapper .tool .confirmButton {
-	cursor: pointer;
-	color: #bb86fc;
-	border: 1px solid white;
-	background: #ffffff0c;
-	margin: 0 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 5px 10px;
-}
-
-.toolWrapper .tool .confirmButton:hover {
-	border-color: #bb86fc;
-}
-
-.toolWrapper .label {
-	font-size: 20px;
-	margin-bottom: 5px;
-	text-align: center;
-}
-.toolWrapper .tool #priceInput {
-	margin-bottom: 5px;
-	width: 100px;
-}
-
-#extractButtons {
-	padding-bottom: 20px;
-}
-
-#extractButtons .title {
-	font-size: 2em;
-	text-align: center;
-	margin-bottom: 10px;
-}
-
-#buttonsWrapper {
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	height: 50px;
-}
-
-.extractButton {
-	cursor: pointer;
-	color: #bb86fc;
-	border: 1px solid white;
-	background: #ffffff0c;
-	margin: 0 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0 10px;
-}
-
-.extractButton:hover {
-	border-color: #bb86fc;
-}
-
-#buttonsWrapper #extractImage {
-	margin-right: 50px;
-}
-
-#buttonsWrapper .shuttleButton {
-}
 
 #downloadPrompt {
 	background: #ffffff0c;
@@ -227,22 +149,6 @@ body {
 #downloadButton:hover {
 	border-color: #bb86fc;
 	animation: none;
-}
-
-@keyframes border-pulsate {
-	0% {
-		border-color: #bb86fcff;
-		color: #bb86fcff;
-	}
-	50% {
-		border-color: #ffffffff;
-		color: #ffffffff;
-	}
-	100% {
-		border-color: #bb86fcff;
-
-		color: #bb86fcff;
-	}
 }
 
 #infoBox {

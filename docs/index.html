@@ -16,6 +16,7 @@
 	</head>
 	<body>
 		<div id="root">
+			<a href="https://ignis05.github.io/baro-sub-tools/index.html" id="link">Sub Tools</a>
 			<div id="header">
 				<h1>Barotrauma Save Tools</h1>
 			</div>
@@ -25,9 +26,16 @@
 					<div id="fileLocHelp">(Where are my .save files?)</div>
 				</div>
 				<input type="file" id="hiddenFileInput" hidden />
-				<div id="drop">Drop your .save here</div>
+				<div id="drop">Drop file here</div>
 			</div>
-			<div id="downloadButton">Download</div>
+			<div id="tools" hidden>
+				<div id="loadedInfo">
+					<div class="title">Loaded savefile:</div>
+					<div class="name">None</div>
+					<div id="downloadButton">Download</div>
+				</div>
+				<div id="submarineTools"></div>
+			</div>
 		</div>
 		<script src="./bundle.js"></script>
 	</body>

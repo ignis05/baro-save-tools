@@ -128,3 +128,23 @@ function loadGameSession() {
 	console.log('test reading gamesession - selected submarine:')
 	console.log(GAMESESSION.attr('submarine'))
 }
+
+// help popup
+$('#fileLocHelp').on('click', () => {
+	var infobox = $(`<div id="infoBox"></div>`)
+	var close = $(`<div id=closeInfoBox>X</div>`)
+	var textWrapper = $(`<div class="text"></div>`)
+	textWrapper.html(`
+	<h3>Saves can be found in your local AppData folder. To get there you can:</h3><ul>
+	<li>Navigate full path:<br><span class="highlight">C:\\Users\\[username]\\AppData\\Local\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
+	<li>Paste this in your file explorator navigation bar:<br><span class="highlight">%localappdata%\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
+	<li>Press Win+R, type <span class="highlight">%localappdata%</span> and navigate from there</li>
+	</ul>
+	`)
+	infobox.append(close).append(textWrapper)
+	close.on('click', () => {
+		close.off('click')
+		infobox.remove()
+	})
+	$(document.body).append(infobox)
+})
