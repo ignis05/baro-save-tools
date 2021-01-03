@@ -223,6 +223,17 @@ body {
 	padding: 3px;
 }
 
+.downloadImg {
+	height: 20px;
+	width: auto;
+	background: #bb86fc;
+	cursor: pointer;
+}
+
+#ownedSubListWrapper .downloadImg {
+	margin-left: 20px;
+}
+
 .ownedSubListElement,
 .avalSubListElement {
 }

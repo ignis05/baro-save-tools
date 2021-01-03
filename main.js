@@ -252,10 +252,12 @@ function updateOwnedSubs() {
 			var name = $(this).attr('name')
 			var radio = $(`<input type="radio" name="selectedOwnedSub" value="${name}" ${name == selectedSub ? 'checked' : ''}/>`)
 			var nameLabel = $(`<div class="name">${name}</div>`)
+			var download = $('<img class="downloadImg" src="./res/download.svg" alt="download" />')
 			var delButton = $('<div class="deleteButton">X</div>')
 			var listEl = $('<div class="ownedSubListElement subListElement"></div>')
 			listEl.append(radio)
 			listEl.append(nameLabel)
+			listEl.append(download)
 			listEl.append(delButton)
 			listEl.appendTo($('#ownedSubListWrapper'))
 
@@ -271,6 +273,19 @@ function updateOwnedSubs() {
 			radio.on('click', function () {
 				console.log(`Changing selected submarine to ${this.value}`)
 				GAMESESSION.attr('submarine', this.value)
+			})
+
+			download.on('click', () => {
+				let filename = SUBFILEMAP[name]
+				let contents = LOADED_FILES[filename]
+				
+				var blob = new Blob([contents], { type: 'application/gzip' })
+				var blobUrl = URL.createObjectURL(blob)
+
+				var a = document.createElement('a')
+				a.href = blobUrl
+				a.download = filename
+				a.click()
 			})
 		})
 }
