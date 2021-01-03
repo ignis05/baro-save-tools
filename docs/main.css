@@ -107,7 +107,14 @@ body {
 	border-bottom: 2px solid white;
 	margin: 5px 0;
 	padding: 2px 5px;
-	font-size: 2em;
+	padding-bottom: 10px;
+	font-size: 1.5em;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#loadedInfo .infoWrapper {
 	display: flex;
 	justify-content: flex-start;
 }
@@ -118,19 +125,10 @@ body {
 
 #loadedInfo .name {
 	color: #03dac6;
+	margin-right: 50px;
 }
-
-
-#downloadPrompt {
-	background: #ffffff0c;
-	border-radius: 10px;
-	padding: 10px;
-	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-	margin: 10px 10px 20px 10px;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+#loadedInfo .date {
+	color: #03dac6;
 }
 
 #downloadButton {

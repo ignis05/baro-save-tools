@@ -3,9 +3,12 @@ const drop = require('drag-and-drop-files')
 const fileReaderStream = require('filereader-stream')
 const concat = require('concat-stream')
 const $ = require('jquery')
+const { FILE } = require('dns')
 
 var LOADED_FILES = {}
 var GAMESESSION = null
+var CAMPAIGN = null
+var FILENAME = ''
 
 // #region files handling
 
@@ -17,6 +20,8 @@ function handleFileUpload(files) {
 		window.alert('Selected file is not a ".save" file')
 		return console.warn('Selected file is not a ".save" file')
 	}
+
+	FILENAME = file.name
 
 	fileReaderStream(file).pipe(
 		concat(function (contents) {
@@ -30,15 +35,15 @@ function handleFileUpload(files) {
 			while (i < buffer.length) {
 				// file name
 				var name_length = buffer.readInt32LE(i)
-				console.log(name_length)
+				// console.log(name_length)
 				i += 4
 				var name = buffer.toString('utf-16le', i, i + name_length * 2)
-				console.log(name)
+				// console.log(name)
 				i += name_length * 2
 
 				//file contents
 				var f_length = buffer.readInt32LE(i)
-				console.log(f_length)
+				// console.log(f_length)
 				i += 4
 				var f_content = buffer.slice(i, i + f_length)
 				i += f_length
@@ -54,7 +59,7 @@ function handleFileUpload(files) {
 				}
 			}
 
-			console.log('File decompressed successfully')
+			console.log('Files decompressed successfully')
 			loadGameSession()
 		})
 	)
@@ -114,7 +119,7 @@ $('#downloadButton').on('click', () => {
 
 	var a = document.createElement('a')
 	a.href = blobUrl
-	a.download = `Modified.save`
+	a.download = FILENAME
 	a.click()
 
 	console.log(`Prompted to download savefile`)
@@ -124,9 +129,21 @@ $('#downloadButton').on('click', () => {
 
 // #endregion files handling
 
+// get data from gamesession
 function loadGameSession() {
-	console.log('test reading gamesession - selected submarine:')
-	console.log(GAMESESSION.attr('submarine'))
+	CAMPAIGN = GAMESESSION.find('MultiPlayerCampaign')
+	if (CAMPAIGN.length == 0) {
+		GAMESESSION = null
+		LOADED_FILES = {}
+		CAMPAIGN = null
+		return window.alert('Single player campaign save files are not supported yet')
+	}
+
+	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
+
+	$('#tools').show()
+	$('#loadedInfo .name').text(FILENAME)
+	$('#loadedInfo .date').text(timestamp.toLocaleString())
 }
 
 // help popup
