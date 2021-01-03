@@ -3,7 +3,6 @@ const drop = require('drag-and-drop-files')
 const fileReaderStream = require('filereader-stream')
 const concat = require('concat-stream')
 const $ = require('jquery')
-const { FILE } = require('dns')
 
 var LOADED_FILES = {}
 var GAMESESSION = null
@@ -21,46 +20,65 @@ function handleFileUpload(files) {
 		return console.warn('Selected file is not a ".save" file')
 	}
 
-	FILENAME = file.name
-
 	fileReaderStream(file).pipe(
 		concat(function (contents) {
 			console.log('File loaded successfully')
 
-			LOADED_FILES = {}
+			// save file
+			if (file.name.endsWith('.save')) {
+				FILENAME = file.name
 
-			var buffer = Buffer.from(zlib.gunzipSync(contents))
+				LOADED_FILES = {}
 
-			var i = 0
-			while (i < buffer.length) {
-				// file name
-				var name_length = buffer.readInt32LE(i)
-				// console.log(name_length)
-				i += 4
-				var name = buffer.toString('utf-16le', i, i + name_length * 2)
-				// console.log(name)
-				i += name_length * 2
+				var buffer = Buffer.from(zlib.gunzipSync(contents))
 
-				//file contents
-				var f_length = buffer.readInt32LE(i)
-				// console.log(f_length)
-				i += 4
-				var f_content = buffer.slice(i, i + f_length)
-				i += f_length
+				var i = 0
+				while (i < buffer.length) {
+					// file name
+					var name_length = buffer.readInt32LE(i)
+					// console.log(name_length)
+					i += 4
+					var name = buffer.toString('utf-16le', i, i + name_length * 2)
+					// console.log(name)
+					i += name_length * 2
 
-				// gamesession saved as xml, other as raw buffer
-				if (name === 'gamesession.xml') {
-					var string = f_content.toString('utf-8')
-					// strip the header - is causing errors
-					var xmlData = $.parseXML(string.substring(`<?xml version="1.0" encoding="utf-8"?>\n`.length))
-					GAMESESSION = $(xmlData).find('Gamesession')
-				} else {
-					LOADED_FILES[name] = f_content
+					//file contents
+					var f_length = buffer.readInt32LE(i)
+					// console.log(f_length)
+					i += 4
+					var f_content = buffer.slice(i, i + f_length)
+					i += f_length
+
+					// gamesession saved as xml, other as raw buffer
+					if (name === 'gamesession.xml') {
+						var string = f_content.toString('utf-8')
+						// strip the header - is causing errors
+						var xmlData = $.parseXML(string.substring(`<?xml version="1.0" encoding="utf-8"?>\n`.length))
+						GAMESESSION = $(xmlData).find('Gamesession')
+					} else {
+						LOADED_FILES[name] = f_content
+					}
 				}
-			}
 
-			console.log('Files decompressed successfully')
-			loadGameSession()
+				console.log('Files decompressed successfully')
+				loadGameSession()
+			} else if (file.name.endsWith('.sub')) {
+				var output = zlib.gunzipSync(contents).toString('utf-8')
+				var name = $($.parseXML(output)).find('Submarine').attr('name')
+
+				if (!name) return window.alert('Could not decompress .sub file, it might be invalid')
+
+				if (LOADED_FILES[file.name]) {
+					console.log(`Updated ${name} submarine file: ${file.name}`)
+				} else {
+					var ownedSubs = GAMESESSION.find('ownedsubmarines')
+					ownedSubs.append(`<sub name="${name}" />`)
+					console.log(`Added new owned submarine ${name}, in file: ${file.name}`)
+				}
+
+				LOADED_FILES[file.name] = contents
+				updateOwnedSubs()
+			}
 		})
 	)
 }
@@ -132,15 +150,16 @@ $('#downloadButton').on('click', () => {
 // get data from gamesession
 function loadGameSession() {
 	CAMPAIGN = GAMESESSION.find('MultiPlayerCampaign')
-	/* if (CAMPAIGN.length == 0) {
+	if (CAMPAIGN.length == 0) {
 		GAMESESSION = null
 		LOADED_FILES = {}
 		CAMPAIGN = null
 		return window.alert('Single player campaign save files are not supported yet')
-	} */
+	}
 
 	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
 
+	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine.')
 	$('#tools').show()
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
