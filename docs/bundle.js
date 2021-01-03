@@ -13927,11 +13927,14 @@ function handleFileUpload(files) {
 				if (!name) return window.alert('Could not decompress .sub file, it might be invalid')
 
 				if (LOADED_FILES[file.name]) {
+					if (!SUBFILEMAP[name]) return window.alert(`File ${file.name} exists, but owned submarine ${name} doesn't. Aborting changes.`)
 					console.log(`Updated ${name} submarine file: ${file.name}`)
 				} else {
+					if (SUBFILEMAP[name]) return window.alert(`File ${file.name} doesnt exist, but owned submarine ${name} does. Aborting changes.`)
 					var ownedSubs = GAMESESSION.find('ownedsubmarines')
 					ownedSubs.append(`<sub name="${name}" />`)
 					console.log(`Added new owned submarine ${name}, in file: ${file.name}`)
+					SUBFILEMAP[name] = file.name
 				}
 
 				LOADED_FILES[file.name] = contents
