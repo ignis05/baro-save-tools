@@ -1,0 +1,26 @@
+{
+	"name": "baro-save-tools",
+	"version": "1.0.0",
+	"description": "# build",
+	"main": "index.js",
+	"scripts": {
+		"watch": "watchify main.js -o ./docs/bundle.js",
+		"build": "browserify main.js > ./docs/bundle.js"
+	},
+	"author": "ignis05",
+	"license": "MIT",
+	"devDependencies": {
+		"concat-stream": "^2.0.0",
+		"drag-and-drop-files": "0.0.1",
+		"filereader-stream": "^0.2.0",
+		"jquery": "^3.5.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ignis05/baro-save-tools.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ignis05/baro-save-tools/issues"
+	},
+	"homepage": "https://ignis05.github.io/baro-save-tools/index.html"
+}

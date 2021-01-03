@@ -1,0 +1,130 @@
+const zlib = require('zlib')
+const drop = require('drag-and-drop-files')
+const fileReaderStream = require('filereader-stream')
+const concat = require('concat-stream')
+const $ = require('jquery')
+
+var LOADED_FILES = {}
+var GAMESESSION = null
+
+// #region files handling
+
+// file upload handler
+function handleFileUpload(files) {
+	var file = files[0]
+
+	if (!file.name.endsWith('.save')) {
+		window.alert('Selected file is not a ".save" file')
+		return console.warn('Selected file is not a ".save" file')
+	}
+
+	fileReaderStream(file).pipe(
+		concat(function (contents) {
+			console.log('File loaded successfully')
+
+			LOADED_FILES = {}
+
+			var buffer = Buffer.from(zlib.gunzipSync(contents))
+
+			var i = 0
+			while (i < buffer.length) {
+				// file name
+				var name_length = buffer.readInt32LE(i)
+				console.log(name_length)
+				i += 4
+				var name = buffer.toString('utf-16le', i, i + name_length * 2)
+				console.log(name)
+				i += name_length * 2
+
+				//file contents
+				var f_length = buffer.readInt32LE(i)
+				console.log(f_length)
+				i += 4
+				var f_content = buffer.slice(i, i + f_length)
+				i += f_length
+
+				// gamesession saved as xml, other as raw buffer
+				if (name === 'gamesession.xml') {
+					var string = f_content.toString('utf-8')
+					// strip the header - is causing errors
+					var xmlData = $.parseXML(string.substring(`<?xml version="1.0" encoding="utf-8"?>\n`.length))
+					GAMESESSION = $(xmlData).find('Gamesession')
+				} else {
+					LOADED_FILES[name] = f_content
+				}
+			}
+
+			console.log('File decompressed successfully')
+			loadGameSession()
+		})
+	)
+}
+
+// dropbox hadling
+drop(document.getElementById('drop'), handleFileUpload)
+
+// click on dropbox handing
+$('#drop').on('click', () => {
+	$('#hiddenFileInput').trigger('click')
+})
+
+$('#hiddenFileInput').on('change', () => {
+	let files = $('#hiddenFileInput')[0].files
+	if (files.length < 1) return
+	handleFileUpload(files)
+})
+
+function addToBuffer(filename, content, buffer) {
+	var name = Buffer.from(filename, 'utf-16le')
+	var name_length = Buffer.alloc(4)
+	name_length.writeInt32LE(filename.length)
+
+	var file
+
+	if (typeof content == 'string') {
+		file = Buffer.from(content, 'utf-8')
+	} else {
+		file = content
+	}
+	var file_length = Buffer.alloc(4)
+	file_length.writeInt32LE(file.length)
+
+	return Buffer.concat([buffer, name_length, name, file_length, file])
+}
+
+// download button
+$('#downloadButton').on('click', () => {
+	console.log('Compressing save')
+	var buffer = Buffer.alloc(0)
+
+	// gamesession.xml  - add stripped header
+	let gameses_string = `<?xml version="1.0" encoding="utf-8"?>\n` + GAMESESSION.prop('outerHTML')
+	buffer = addToBuffer('gamesession.xml', gameses_string, buffer)
+
+	// other files
+	for (let filename in LOADED_FILES) {
+		buffer = addToBuffer(filename, LOADED_FILES[filename], buffer)
+	}
+
+	// compression
+	var output = zlib.gzipSync(buffer)
+
+	var blob = new Blob([output.buffer], { type: 'application/gzip' })
+	var blobUrl = URL.createObjectURL(blob)
+
+	var a = document.createElement('a')
+	a.href = blobUrl
+	a.download = `Modified.save`
+	a.click()
+
+	console.log(`Prompted to download savefile`)
+
+	$('#downloadPrompt').hide()
+})
+
+// #endregion files handling
+
+function loadGameSession() {
+	console.log('test reading gamesession - selected submarine:')
+	console.log(GAMESESSION.attr('submarine'))
+}
