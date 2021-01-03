@@ -13876,8 +13876,8 @@ var FILENAME = ''
 function handleFileUpload(files) {
 	var file = files[0]
 
-	if (!file.name.endsWith('.save')) {
-		window.alert('Selected file is not a ".save" file')
+	if (!file.name.endsWith('.save') && !GAMESESSION) {
+		window.alert('Uploaded file is not a ".save" file. Upload .save file to start editing.')
 		return console.warn('Selected file is not a ".save" file')
 	}
 
@@ -13992,12 +13992,12 @@ $('#downloadButton').on('click', () => {
 // get data from gamesession
 function loadGameSession() {
 	CAMPAIGN = GAMESESSION.find('MultiPlayerCampaign')
-	if (CAMPAIGN.length == 0) {
+	/* if (CAMPAIGN.length == 0) {
 		GAMESESSION = null
 		LOADED_FILES = {}
 		CAMPAIGN = null
 		return window.alert('Single player campaign save files are not supported yet')
-	}
+	} */
 
 	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
 
@@ -14005,6 +14005,7 @@ function loadGameSession() {
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
 	updateAvalSubs()
+	updateOwnedSubs()
 }
 
 // help popup
@@ -14029,16 +14030,14 @@ $('#fileLocHelp').on('click', () => {
 
 // #region tools
 
-function addToAvalSubsList(name) {}
-
-// available submarines list
+// #region available submarines list
 function updateAvalSubs() {
 	$('.avalSubListElement').remove()
 	CAMPAIGN.find('Sub').each(function () {
 		var name = $(this).attr('name')
 		var nameLabel = $(`<div class="name">${name}</div>`)
 		var delButton = $('<div class="deleteButton">X</div>')
-		var listEl = $('<div class="avalSubListElement"></div>')
+		var listEl = $('<div class="avalSubListElement subListElement"></div>')
 		listEl.append(nameLabel)
 		listEl.append(delButton)
 		listEl.appendTo($('#avalSubListWrapper'))
@@ -14059,6 +14058,38 @@ $('#addToAvalSubsButton').on('click', () => {
 
 	updateAvalSubs()
 })
+// #endregion available submarines list
+
+// #region owned submarines list
+function updateOwnedSubs() {
+	var selectedSub = GAMESESSION.attr('submarine')
+	$('.ownedSubListElement').remove()
+	GAMESESSION.find('ownedsubmarines')
+		.find('sub')
+		.each(function () {
+			var name = $(this).attr('name')
+			var radio = $(`<input type="radio" name="selectedOwnedSub" value="${name}" ${name == selectedSub ? 'checked' : ''}/>`)
+			var nameLabel = $(`<div class="name">${name}</div>`)
+			var delButton = $('<div class="deleteButton">X</div>')
+			var listEl = $('<div class="ownedSubListElement subListElement"></div>')
+			listEl.append(radio)
+			listEl.append(nameLabel)
+			listEl.append(delButton)
+			listEl.appendTo($('#ownedSubListWrapper'))
+
+			delButton.on('click', () => {
+				console.log(`Removing ${name} from available subs`)
+				$(this).remove()
+				listEl.remove()
+			})
+
+			radio.on('click', function () {
+				console.log(`Changing selected submarine to ${this.value}`)
+				GAMESESSION.attr('submarine', this.value)
+			})
+		})
+}
+// #endregion owned submarines list
 
 // #endregion tools
 

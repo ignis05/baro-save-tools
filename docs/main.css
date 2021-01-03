@@ -190,7 +190,7 @@ body {
 	align-items: flex-start;
 }
 
-#availableSubs {
+.subList {
 	background: #ffffff0c;
 	border-radius: 20px;
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
@@ -199,20 +199,20 @@ body {
 	margin-bottom: 20px;
 }
 
-#avalSubListWrapper {
+.subListWrapper {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
 }
 
-#availableSubs .label {
+.subList .label {
 	color: #03dac6;
 	margin-bottom: 10px;
 	text-align: center;
 }
 
-#availableSubs .avalSubListElement {
+.subList .subListElement {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
@@ -223,9 +223,14 @@ body {
 	padding: 3px;
 }
 
-#availableSubs .deleteButton {
+.ownedSubListElement,
+.avalSubListElement {
+}
+
+.subListElement .deleteButton {
 	color: #bb86fc;
 	cursor: pointer;
+	margin-left: 10px;
 }
 
 #availableSubs .adderWrapper {
