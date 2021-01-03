@@ -13866,6 +13866,7 @@ var LOADED_FILES = {}
 var GAMESESSION = null
 var CAMPAIGN = null
 var FILENAME = ''
+var SUBFILEMAP = {}
 
 // #region files handling
 
@@ -13919,11 +13920,10 @@ function handleFileUpload(files) {
 				}
 
 				console.log('Files decompressed successfully')
+				generateSubFileMap()
 				loadGameSession()
 			} else if (file.name.endsWith('.sub')) {
-				var output = zlib.gunzipSync(contents).toString('utf-8')
-				var name = $($.parseXML(output)).find('Submarine').attr('name')
-
+				var name = getNameFromSubFile(contents)
 				if (!name) return window.alert('Could not decompress .sub file, it might be invalid')
 
 				if (LOADED_FILES[file.name]) {
@@ -14002,6 +14002,26 @@ $('#downloadButton').on('click', () => {
 
 	$('#downloadPrompt').hide()
 })
+
+// decompress .sub file and get name from xml
+function getNameFromSubFile(buffer) {
+	var output = zlib.gunzipSync(buffer).toString('utf-8')
+	var name = $($.parseXML(output)).find('Submarine').attr('name')
+	if (!name) console.error(`Failed to fetch submarine name`)
+	return name
+}
+
+function generateSubFileMap() {
+	// map submarine names from .sub files - in case they're compretely different (R-29)
+	SUBFILEMAP = {}
+	for (let filename in LOADED_FILES) {
+		if (!filename.endsWith('.sub')) continue
+		var name = getNameFromSubFile(LOADED_FILES[filename])
+		if (!name) return window.alert(`Failed to decompress ${filename}, it might be invalid`)
+		SUBFILEMAP[name] = filename
+	}
+	console.log('Mapped submarine names correctly.')
+}
 
 // #endregion files handling
 
@@ -14098,6 +14118,9 @@ function updateOwnedSubs() {
 				console.log(`Removing ${name} from available subs`)
 				$(this).remove()
 				listEl.remove()
+				// remove .sub file & entry in name map
+				delete LOADED_FILES[SUBFILEMAP[name]]
+				delete SUBFILEMAP[name]
 			})
 
 			radio.on('click', function () {
