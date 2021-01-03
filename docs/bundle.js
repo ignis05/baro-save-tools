@@ -14004,6 +14004,7 @@ function loadGameSession() {
 	$('#tools').show()
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
+	updateAvalSubs()
 }
 
 // help popup
@@ -14025,6 +14026,41 @@ $('#fileLocHelp').on('click', () => {
 	})
 	$(document.body).append(infobox)
 })
+
+// #region tools
+
+function addToAvalSubsList(name) {}
+
+// available submarines list
+function updateAvalSubs() {
+	$('.avalSubListElement').remove()
+	CAMPAIGN.find('Sub').each(function () {
+		var name = $(this).attr('name')
+		var nameLabel = $(`<div class="name">${name}</div>`)
+		var delButton = $('<div class="deleteButton">X</div>')
+		var listEl = $('<div class="avalSubListElement"></div>')
+		listEl.append(nameLabel)
+		listEl.append(delButton)
+		listEl.appendTo($('#avalSubListWrapper'))
+
+		delButton.on('click', () => {
+			console.log(`Removing ${name} from available subs`)
+			$(this).remove()
+			listEl.remove()
+		})
+	})
+}
+$('#addToAvalSubsButton').on('click', () => {
+	var name = $('#addToAvalSubs').val()
+	console.log(`Adding ${name} to availale subs`)
+	$('#addToAvalSubs').val('')
+	var avalSubs = CAMPAIGN.find('AvailableSubs')
+	avalSubs.append(`<Sub name="${name}" />`)
+
+	updateAvalSubs()
+})
+
+// #endregion tools
 
 }).call(this)}).call(this,require("buffer").Buffer)
 },{"buffer":10,"concat-stream":54,"dns":9,"drag-and-drop-files":56,"filereader-stream":57,"jquery":59,"zlib":8}],53:[function(require,module,exports){

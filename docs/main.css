@@ -182,3 +182,66 @@ body {
 .highlight {
 	color: #03dac6;
 }
+
+#saveTools {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: flex-start;
+}
+
+#availableSubs {
+	background: #ffffff0c;
+	border-radius: 20px;
+	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#avalSubListWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+#availableSubs .label {
+	color: #03dac6;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+#availableSubs .avalSubListElement {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	border: 1px dashed #ffffff55;
+	box-sizing: border-box;
+	padding: 3px;
+}
+
+#availableSubs .deleteButton {
+	color: #bb86fc;
+	cursor: pointer;
+}
+
+#availableSubs .adderWrapper {
+	padding-top: 10px;
+	width: 100%;
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#addToAvalSubs {
+	margin-right: 10px;
+}
+
+#addToAvalSubsButton {
+	color: #bb86fc;
+	cursor: pointer;
+}
