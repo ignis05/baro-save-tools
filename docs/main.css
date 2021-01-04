@@ -33,6 +33,7 @@ body {
 	cursor: pointer;
 	display: block;
 	text-decoration: none;
+	color: white;
 }
 
 #root > #link:hover {
