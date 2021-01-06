@@ -13870,6 +13870,7 @@ var GAMESESSION = null
 var CAMPAIGN = null
 var FILENAME = ''
 var SUBFILEMAP = {}
+var MULTIPLAYER = false
 
 // #region files handling
 
@@ -14060,15 +14061,13 @@ $('#downloadGamesession').on('click', () => {
 function loadGameSession() {
 	CAMPAIGN = GAMESESSION.find('MultiPlayerCampaign')
 	if (CAMPAIGN.length == 0) {
-		GAMESESSION = null
-		LOADED_FILES = {}
-		CAMPAIGN = null
-		return window.alert('Single player campaign save files are not supported yet')
-	}
+		CAMPAIGN = GAMESESSION.find('SinglePlayerCampaign')
+		MULTIPLAYER = false
+	} else MULTIPLAYER = true
 
 	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
 
-	showMsg(`Now editing: <span>${FILENAME}</span>`)
+	showMsg(`Loaded ${MULTIPLAYER ? 'multiplayer' : 'singleplayer'} savefile: <span>${FILENAME}</span>`)
 
 	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine. Drag gamesession.xml to replace currently loaded one.')
 	$('#tools').show()
@@ -14115,7 +14114,14 @@ function showMsg(msg) {
 // #region available submarines list
 function updateAvalSubs() {
 	$('.avalSubListElement').remove()
-	CAMPAIGN.find('Sub').each(function () {
+
+	var avalSubs = CAMPAIGN.find('AvailableSubs')
+
+	// don't render component if no AvalSubs (SP save loaded)
+	if (avalSubs.length < 1) return $('#availableSubs').hide()
+	else $('#availableSubs').show()
+
+	avalSubs.find('Sub').each(function () {
 		var name = $(this).attr('name')
 		var nameLabel = $(`<div class="name">${name}</div>`)
 		var delButton = $('<div class="deleteButton">X</div>')
