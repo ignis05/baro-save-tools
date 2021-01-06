@@ -3,6 +3,7 @@ const drop = require('drag-and-drop-files')
 const fileReaderStream = require('filereader-stream')
 const concat = require('concat-stream')
 const $ = require('jquery')
+const { FILE } = require('dns')
 
 var LOADED_FILES = {}
 var GAMESESSION = null
@@ -71,11 +72,13 @@ function handleFileUpload(files) {
 				if (LOADED_FILES[file.name]) {
 					if (!SUBFILEMAP[name]) return window.alert(`File ${file.name} exists, but owned submarine ${name} doesn't. Aborting changes.`)
 					console.log(`Updated ${name} submarine file: ${file.name}`)
+					showMsg(`Updated <span>${name}</span> submarine file: <span>${file.name}</span>`)
 				} else {
 					if (SUBFILEMAP[name]) return window.alert(`File ${file.name} doesnt exist, but owned submarine ${name} does. Aborting changes.`)
 					var ownedSubs = GAMESESSION.find('ownedsubmarines')
 					ownedSubs.append(`<sub name="${name}" />`)
 					console.log(`Added new owned submarine ${name}, in file: ${file.name}`)
+					showMsg(`Added new owned submarine <span>${name}</span>, in file: <span>${file.name}</span>`)
 					SUBFILEMAP[name] = file.name
 				}
 
@@ -88,6 +91,7 @@ function handleFileUpload(files) {
 				GAMESESSION = $(xmlData).find('Gamesession')
 				loadGameSession()
 				console.log('Updated gamesession.xml')
+				showMsg('Updated <span>gamesession.xml</span>')
 			} else {
 				return window.alert(`File extention not recognized.`)
 			}
@@ -204,6 +208,8 @@ function loadGameSession() {
 
 	var timestamp = new Date(parseInt(GAMESESSION.attr('savetime')) * 1000)
 
+	showMsg(`Now editing: <span>${FILENAME}</span>`)
+
 	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine. Drag gamesession.xml to replace currently loaded one.')
 	$('#tools').show()
 	$('#loadedInfo .name').text(FILENAME)
@@ -233,6 +239,17 @@ $('#fileLocHelp').on('click', () => {
 	$(document.body).append(infobox)
 })
 
+// "console" popups
+function showMsg(msg) {
+	let entry = $(`<div class="consoleMsg">[${new Date().toLocaleTimeString()}] - ${msg}</div>`)
+	entry.appendTo($('#console')).hide().fadeIn(1000)
+	setTimeout(() => {
+		entry.fadeOut(1000, () => {
+			entry.remove()
+		})
+	}, 1000 * 5)
+}
+
 // #region tools
 
 // #region available submarines list
@@ -251,6 +268,7 @@ function updateAvalSubs() {
 			console.log(`Removing ${name} from available subs`)
 			$(this).remove()
 			listEl.remove()
+			showMsg(`Removed <span>${name}</span> from available subs`)
 		})
 	})
 }
@@ -260,6 +278,7 @@ $('#addToAvalSubsButton').on('click', () => {
 	$('#addToAvalSubs').val('')
 	var avalSubs = CAMPAIGN.find('AvailableSubs')
 	avalSubs.append(`<Sub name="${name}" />`)
+	showMsg(`Added <span>${name}</span> to available subs`)
 
 	updateAvalSubs()
 })
@@ -291,11 +310,13 @@ function updateOwnedSubs() {
 				// remove .sub file & entry in name map
 				delete LOADED_FILES[SUBFILEMAP[name]]
 				delete SUBFILEMAP[name]
+				showMsg(`Removed <span>${name}</span> from available subs`)
 			})
 
 			radio.on('click', function () {
 				console.log(`Changing selected submarine to ${this.value}`)
 				GAMESESSION.attr('submarine', this.value)
+				showMsg(`Changed selected submarine to <span>${this.value}</span>`)
 			})
 
 			download.on('click', () => {
@@ -318,6 +339,7 @@ $('#moneyConfirm').on('click', () => {
 	let money = $('#moneyInput').val()
 	CAMPAIGN.attr('money', money)
 	console.log(`Set current money to ${money}`)
+	showMsg(`Set current money to <span>${money}</span>`)
 })
 
 // #endregion tools
