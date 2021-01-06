@@ -216,6 +216,7 @@ function loadGameSession() {
 	$('#moneyInput').val(CAMPAIGN.attr('money'))
 	updateAvalSubs()
 	updateOwnedSubs()
+	updateCrewList()
 }
 
 // help popup
@@ -347,5 +348,29 @@ $('#moneyConfirm').on('click', () => {
 	console.log(`Set current money to ${money}`)
 	showMsg(`Set current money to <span>${money}</span>`)
 })
+
+// #region crew list
+function updateCrewList() {
+	// singleplayer
+	var crew = GAMESESSION.find('crew')
+
+	// multiplayer
+	if (crew.length < 1) crew = GAMESESSION.find('bots')
+
+	$('.crewListElement').remove()
+
+	crew.find('Character').each(function () {
+		var name = $(this).attr('name')
+		var job = $(this).find('job').attr('identifier')
+
+		var nameLabel = $(`<div class="name ${job}">${name}</div>`)
+		// var editButton = $('<div class="deleteButton">X</div>')
+		var listEl = $('<div class="ownedSubListElement subListElement"></div>')
+		listEl.append(nameLabel)
+		// listEl.append(editButton)
+		listEl.appendTo($('#crewListWrapper'))
+	})
+}
+// #endregion crew list
 
 // #endregion tools

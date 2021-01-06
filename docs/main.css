@@ -307,3 +307,27 @@ body {
 #otherOptions .adderWrapper {
 	padding-top: 0px;
 }
+
+.captain {
+	color: #718fb7;
+}
+
+.engineer {
+	color: #d7ac60;
+}
+
+.mechanic {
+	color: #60c9d0;
+}
+
+.securityofficer {
+	color: #8d776a;
+}
+
+.medicaldoctor {
+	color: #b9472b;
+}
+
+.assistant {
+	color: #f8f8f8;
+}
