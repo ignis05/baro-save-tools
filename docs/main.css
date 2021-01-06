@@ -298,16 +298,35 @@ body {
 	color: #bb86fc;
 }
 
+#idInput {
+	width: 50px;
+}
+
+#idConfirm {
+	cursor: pointer;
+	color: #bb86fc;
+	margin-left: 20px;
+}
+
 #convertSaveButton {
 	margin-top: 10px;
 	cursor: pointer;
 	color: #bb86fc;
+	border: 1px solid #bb86fc;
+	padding:2px;
+	text-align: center;
 }
 
-.optionWrapper:nth-child(n + 3) {
-	border-top: 1px solid white;
-	margin-top: 10px;
-	padding-top: 10px;
+.optionWrapper:nth-child(n + 2) {
+	border-bottom: 1px solid white;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+.optionWrapper:last-child {
+	border-bottom: 0;
+	margin-bottom: 10px;
+	padding-bottom: 0;
 }
 
 #otherOptions .adderWrapper {
@@ -336,4 +355,8 @@ body {
 
 .assistant {
 	color: #f8f8f8;
+}
+
+.idInputWrapper {
+	justify-content: flex-start;
 }

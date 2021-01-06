@@ -209,16 +209,32 @@ function loadGameSession() {
 
 	showMsg(`Loaded ${MULTIPLAYER ? 'multiplayer' : 'singleplayer'} savefile: <span>${FILENAME}</span>`)
 
+	// show main panel
 	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine. Drag gamesession.xml to replace currently loaded one.')
 	$('#tools').show()
+
+	// savefile details
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
+
+	// other tools
 	$('#moneyInput').val(CAMPAIGN.attr('money'))
+
+	// mp campaign_id input
+	if (MULTIPLAYER) {
+		$('#mpIdTool').show()
+		let id = GAMESESSION.attr('campaignid')
+		$('#idInput').val(id)
+	} else {
+		$('#mpIdTool').hide()
+	}
+	// savefile conversion labels
 	var type = 'Multiplayer'
 	var falseType = 'Singleplayer'
 	if (!MULTIPLAYER) [type, falseType] = [falseType, type]
 	$('#saveTypeLabel').text(type)
 	$('#notSaveTypeLabel').text(falseType)
+
 	updateAvalSubs()
 	updateOwnedSubs()
 	updateCrewList()
@@ -347,6 +363,7 @@ function updateOwnedSubs() {
 }
 // #endregion owned submarines list
 
+// #region other tools
 $('#moneyConfirm').on('click', () => {
 	let money = $('#moneyInput').val()
 	CAMPAIGN.attr('money', money)
@@ -354,9 +371,18 @@ $('#moneyConfirm').on('click', () => {
 	showMsg(`Set current money to <span>${money}</span>`)
 })
 
+$('#idConfirm').on('click', () => {
+	let id = $('#idInput').val()
+	console.log(`Setting campaign id to ${id}`)
+	GAMESESSION.attr('campaignid', id)
+	showMsg(`Changed campaign id to <span>${id}</span>`)
+})
+
 // convert save file
 $('#convertSaveButton').on('click', () => {
-	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost. Make sure you have some bots or that save might get bricked.\n\nPress OK to continue` : `WARNING: after converting savefile to multiplayer available submarines will be stripped and current crew will become AI crew\n\nPress OK to continue`
+	let warningString = MULTIPLAYER
+		? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots or that save might get bricked.\n\nThis tool was tested, but you can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
+		: `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAlso after converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nThis tool was tested, but you can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
 
 	let confirm = window.confirm(warningString)
 	if (confirm === false) {
@@ -397,15 +423,16 @@ $('#convertSaveButton').on('click', () => {
 		// convert
 		CAMPAIGN.replaceWith(`<MultiPlayerCampaign money="${money}" cheatsenabled="${cheats}">${CAMPAIGN.html()}</MultiPlayerCampaign>`)
 
-		// set campaign id tag
-		GAMESESSION.attr('campaignid', (Math.floor(Math.random() * 31) + 50).toString()) // temp untill id field is added
+		// set campaign id tag - very small chance of confict, can be changed with tools after
+		GAMESESSION.attr('campaignid', (Math.floor(Math.random() * 50) + 50).toString())
 
 		console.log(`Converted campaign type to MultiPlayer`)
 		showMsg(`Converted campaign type to <span>MultiPlayer</span>`)
-		console.log(GAMESESSION)
 	}
 	loadGameSession()
 })
+
+// #endregion other tools
 
 // #region crew list
 function updateCrewList() {
