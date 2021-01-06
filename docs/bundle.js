@@ -13954,7 +13954,7 @@ function handleFileUpload(files) {
 				console.log('Updated gamesession.xml')
 				showMsg('Updated <span>gamesession.xml</span>')
 			} else {
-				return window.alert(`File extention not recognized.`)
+				return window.alert(`File extension not recognized.`)
 			}
 		})
 	)
@@ -14074,6 +14074,11 @@ function loadGameSession() {
 	$('#loadedInfo .name').text(FILENAME)
 	$('#loadedInfo .date').text(timestamp.toLocaleString())
 	$('#moneyInput').val(CAMPAIGN.attr('money'))
+	var type = 'Multiplayer'
+	var falseType = 'Singleplayer'
+	if (!MULTIPLAYER) [type, falseType] = [falseType, type]
+	$('#saveTypeLabel').text(type)
+	$('#notSaveTypeLabel').text(falseType)
 	updateAvalSubs()
 	updateOwnedSubs()
 	updateCrewList()
@@ -14207,6 +14212,30 @@ $('#moneyConfirm').on('click', () => {
 	CAMPAIGN.attr('money', money)
 	console.log(`Set current money to ${money}`)
 	showMsg(`Set current money to <span>${money}</span>`)
+})
+
+// convert save file
+$('#convertSaveButton').on('click', () => {
+	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost. Make sure you have some bots or that save might get bricked.\n\nPress OK to continue` : `WARNING: after converting savefile to multiplayer type available submarines list will be empty. Make sure to add some names there or outposts won't have any submarines available for purchase\n\nPress OK to continue`
+
+	let confirm = window.confirm(warningString)
+	if (confirm === false) {
+		console.log('Cancelled save conversion')
+		return showMsg('Cancelled save conversion')
+	}
+
+	if (MULTIPLAYER) {
+		var crew = CAMPAIGN.find('bots')
+		CAMPAIGN.append(`<crew>${crew.html()}</crew>`)
+		crew.remove()
+		var money = CAMPAIGN.attr('money')
+		var cheats = CAMPAIGN.attr('cheatsenabled')
+		CAMPAIGN.replaceWith(`<SinglePlayerCampaign money="${money}" cheatsenabled="${cheats}">${CAMPAIGN.html()}</SinglePlayerCampaign>`)
+		console.log(`Converted campaign type to Singleplayer`)
+		showMsg(`Converted campaign type to <span>Singleplayer</span>`)
+		loadGameSession()
+	} else {
+	}
 })
 
 // #region crew list

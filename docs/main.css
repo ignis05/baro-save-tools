@@ -298,6 +298,12 @@ body {
 	color: #bb86fc;
 }
 
+#convertSaveButton {
+	margin-top: 10px;
+	cursor: pointer;
+	color: #bb86fc;
+}
+
 .optionWrapper:nth-child(n + 3) {
 	border-top: 1px solid white;
 	margin-top: 10px;
