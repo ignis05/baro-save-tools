@@ -14216,7 +14216,7 @@ $('#moneyConfirm').on('click', () => {
 
 // convert save file
 $('#convertSaveButton').on('click', () => {
-	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost. Make sure you have some bots or that save might get bricked.\n\nPress OK to continue` : `WARNING: after converting savefile to multiplayer type available submarines list will be empty. Make sure to add some names there or outposts won't have any submarines available for purchase\n\nPress OK to continue`
+	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost. Make sure you have some bots or that save might get bricked.\n\nPress OK to continue` : `WARNING: after converting savefile to multiplayer available submarines will be stripped and current crew will become AI crew\n\nPress OK to continue`
 
 	let confirm = window.confirm(warningString)
 	if (confirm === false) {
@@ -14225,17 +14225,46 @@ $('#convertSaveButton').on('click', () => {
 	}
 
 	if (MULTIPLAYER) {
+		// crew
 		var crew = CAMPAIGN.find('bots')
-		CAMPAIGN.append(`<crew>${crew.html()}</crew>`)
-		crew.remove()
+		crew.replaceWith(`<crew>${crew.html()}</crew>`)
+
+		// campaign attributes
 		var money = CAMPAIGN.attr('money')
 		var cheats = CAMPAIGN.attr('cheatsenabled')
+
+		// strip aval subs
+		var avalSubs = CAMPAIGN.find('AvailableSubs')
+		avalSubs.remove()
+
+		// convert
 		CAMPAIGN.replaceWith(`<SinglePlayerCampaign money="${money}" cheatsenabled="${cheats}">${CAMPAIGN.html()}</SinglePlayerCampaign>`)
-		console.log(`Converted campaign type to Singleplayer`)
-		showMsg(`Converted campaign type to <span>Singleplayer</span>`)
-		loadGameSession()
+
+		console.log(`Converted campaign type to SinglePlayer`)
+		showMsg(`Converted campaign type to <span>SinglePlayer</span>`)
 	} else {
+		// crew
+		var crew = CAMPAIGN.find('crew')
+		crew.replaceWith(`<bots hasbots="true">${crew.html()}</bots>`)
+
+		// campaign attributes
+		var money = CAMPAIGN.attr('money')
+		var cheats = CAMPAIGN.attr('cheatsenabled')
+
+		// add default avalsubs
+		CAMPAIGN.append(`<AvailableSubs><Sub name="Azimuth" /><Sub name="Berilia" /><Sub name="Dugong" /><Sub name="Humpback" /><Sub name="Kastrull" /><Sub name="Orca" /><Sub name="R-29" /><Sub name="Remora" /><Sub name="Typhon" /><Sub name="Typhon2" /></AvailableSubs>`)
+
+		// convert
+		CAMPAIGN.replaceWith(`<MultiPlayerCampaign money="${money}" cheatsenabled="${cheats}">${CAMPAIGN.html()}</MultiPlayerCampaign>`)
+
+		// set campaign id tag
+		GAMESESSION.attr('campaignid', (Math.floor(Math.random() * 31) + 50).toString()) // temp untill id field is added
+
+		console.log(`Converted campaign type to MultiPlayer`)
+		showMsg(`Converted campaign type to <span>MultiPlayer</span>`)
+		console.log(GAMESESSION)
 	}
+	loadGameSession()
 })
 
 // #region crew list
