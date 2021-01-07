@@ -94,7 +94,7 @@ body {
 }
 
 #dropWrapper .desc {
-	font-size: 0.9em;
+	font-size: 1.1em;
 }
 
 #dropWrapper #fileLocHelp {
@@ -168,7 +168,7 @@ body {
 	animation: none;
 }
 
-#infoBox {
+.infoBox {
 	background: #2c2c2c;
 	border-radius: 10px;
 	padding: 10px;
@@ -183,8 +183,11 @@ body {
 	border: 3px solid white;
 	font-size: 20px;
 }
+.infoBox span {
+	color: #03dac6;
+}
 
-#closeInfoBox {
+.closeInfoBox {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -313,7 +316,7 @@ body {
 	cursor: pointer;
 	color: #bb86fc;
 	border: 1px solid #bb86fc;
-	padding:2px;
+	padding: 2px;
 	text-align: center;
 }
 

@@ -236,8 +236,21 @@ function loadGameSession() {
 	showMsg(`Loaded ${MULTIPLAYER ? 'multiplayer' : 'singleplayer'} savefile: <span>${FILENAME}</span>`)
 
 	// show main panel
-	$('#dropWrapper .desc').html('Drag .sub file to add it as owned submarine.<br/>Drag gamesession.xml to replace currently loaded one.<br/>Drag name_CharacterData.xml to import human characters as bots.')
-	$('#tools').show()
+	// $('#dropWrapper .desc').html('Drag .sub file to add it as owned submarine.<br/>Drag gamesession.xml to replace currently loaded one.<br/>Drag name_CharacterData.xml to import human characters as bots.')
+	if ($('#tools').is(':hidden')) {
+		$('#dropWrapper .desc').html('Click here to see what files can be uploaded')
+		$('#dropWrapper .desc').css('cursor', 'pointer')
+		$('#dropWrapper .desc').on('click', () => {
+			showInfoBox(`
+			<h3>Drag files to modify save:</h3>
+			Drag another <span>.save</span> file to edit it instead.<br>
+			Drag <span>.sub</span> file to add it as owned submarine (or update existing owned subarine with matching name).<br>
+			Drag <span>gamesession.xml</span> to replace currently loaded one.<br>
+			Drag <span>[name]_CharacterData.xml</span> to import human characters as bots.<br>
+			`)
+		})
+		$('#tools').show()
+	}
 
 	// savefile details
 	$('#loadedInfo .name').text(FILENAME)
@@ -266,24 +279,28 @@ function loadGameSession() {
 	updateCrewList()
 }
 
-// help popup
-$('#fileLocHelp').on('click', () => {
-	var infobox = $(`<div id="infoBox"></div>`)
-	var close = $(`<div id=closeInfoBox>X</div>`)
+function showInfoBox(text) {
+	var infobox = $(`<div class="infoBox"></div>`)
+	var close = $(`<div class=closeInfoBox>X</div>`)
 	var textWrapper = $(`<div class="text"></div>`)
-	textWrapper.html(`
-	<h3>Savefiles location depends on your operating system:</h3><ul>
-	<li>Windows - <span class="highlight">C:\\Users\\%username%\\AppData\\Local\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
-	<br><li>Linux - <span class="highlight">/home/$USER/.local/share/Daedalic Entertainment GmbH/</span></li>
-	<br><li>macOS - <span class="highlight">/$USER/Library/Application Support/Daedalic Entertainment GmbH/</span></li>
-	</ul>
-	`)
+	textWrapper.html(text)
 	infobox.append(close).append(textWrapper)
 	close.on('click', () => {
 		close.off('click')
 		infobox.remove()
 	})
 	$(document.body).append(infobox)
+}
+
+// help popup
+$('#fileLocHelp').on('click', () => {
+	showInfoBox(`
+	<h3>Savefiles location depends on your operating system:</h3><ul>
+	<li>Windows - <span>C:\\Users\\%username%\\AppData\\Local\\Daedalic Entertainment GmbH\\Barotrauma</span></li>
+	<br><li>Linux - <span>/home/$USER/.local/share/Daedalic Entertainment GmbH/</span></li>
+	<br><li>macOS - <span>/$USER/Library/Application Support/Daedalic Entertainment GmbH/</span></li>
+	</ul>
+	`)
 })
 
 // "console" popups
@@ -407,8 +424,8 @@ $('#idConfirm').on('click', () => {
 // convert save file
 $('#convertSaveButton').on('click', () => {
 	let warningString = MULTIPLAYER
-		? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots or that save might get bricked.\n\nThis tool was tested, but you can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
-		: `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAlso after converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nThis tool was tested, but you can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
+		? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots or that save might get bricked.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
+		: `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAlso after converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
 
 	let confirm = window.confirm(warningString)
 	if (confirm === false) {
