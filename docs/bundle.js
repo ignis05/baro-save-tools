@@ -13953,6 +13953,32 @@ function handleFileUpload(files) {
 				loadGameSession()
 				console.log('Updated gamesession.xml')
 				showMsg('Updated <span>gamesession.xml</span>')
+			} else if (file.name.endsWith('CharacterData.xml')) {
+				var string = contents.toString('utf-8')
+				// strip the header - is causing errors
+				var xmlData = $.parseXML(string.substring(`<?xml version="1.0" encoding="utf-8"?>\n`.length))
+
+				var crew
+				if (MULTIPLAYER) {
+					crew = CAMPAIGN.find('bots')
+					crew.attr('hasbots', 'true')
+				} else crew = CAMPAIGN.find('crew')
+
+				$(xmlData)
+					.find('CharacterCampaignData')
+					.each(function () {
+						let chData = $(this)
+						let character = chData.find('Character')
+						let inventory = chData.find('inventory')[0] // its also used for subinvetories - take the first one
+						let health = chData.find('health')
+						character.append(inventory).append(health)
+						crew.append(character)
+						let name = character.attr('name')
+						console.log(`Added ${name} to the crew list`)
+						showMsg(`Added <span>${name}</span> to the crew list`)
+					})
+
+				updateCrewList()
 			} else {
 				return window.alert(`File extension not recognized.`)
 			}
@@ -14070,7 +14096,7 @@ function loadGameSession() {
 	showMsg(`Loaded ${MULTIPLAYER ? 'multiplayer' : 'singleplayer'} savefile: <span>${FILENAME}</span>`)
 
 	// show main panel
-	$('#dropWrapper .desc').text('Drag .sub file to add it as owned submarine. Drag gamesession.xml to replace currently loaded one.')
+	$('#dropWrapper .desc').html('Drag .sub file to add it as owned submarine.<br/>Drag gamesession.xml to replace currently loaded one.<br/>Drag name_CharacterData.xml to import human characters as bots.')
 	$('#tools').show()
 
 	// savefile details
@@ -14310,7 +14336,7 @@ function updateCrewList() {
 
 		var nameLabel = $(`<div class="name ${job}">${name}</div>`)
 		// var editButton = $('<div class="deleteButton">X</div>')
-		var listEl = $('<div class="ownedSubListElement subListElement"></div>')
+		var listEl = $('<div class="crewListElement subListElement"></div>')
 		listEl.append(nameLabel)
 		// listEl.append(editButton)
 		listEl.appendTo($('#crewListWrapper'))
