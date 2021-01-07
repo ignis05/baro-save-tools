@@ -475,11 +475,18 @@ function updateCrewList() {
 		var job = $(this).find('job').attr('identifier')
 
 		var nameLabel = $(`<div class="name ${job}">${name}</div>`)
-		// var editButton = $('<div class="deleteButton">X</div>')
+		var deleteButton = $('<div class="deleteButton">X</div>')
 		var listEl = $('<div class="crewListElement subListElement"></div>')
 		listEl.append(nameLabel)
-		// listEl.append(editButton)
+		listEl.append(deleteButton)
 		listEl.appendTo($('#crewListWrapper'))
+
+		deleteButton.on('click', () => {
+			console.log(`Removing character ${name}`)
+			$(this).remove()
+			listEl.remove()
+			showMsg(`Removed character <span>${name}</span>`)
+		})
 	})
 }
 // #endregion crew list
