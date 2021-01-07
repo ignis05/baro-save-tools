@@ -17,14 +17,23 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 
 ### Available Submarines List
 
+-  for multiplayer saves only (SP saves have all submarines available)
 -  manage submarines availabe for purchase at outposts
 -  remove submarine from the list using "X" button
 -  add submarine to the list by typing its name below and pressing "Add"
 
+### Current crew list
+
+-  shows list of AI crewmates
+-  remove crewmates with "X" button
+-  upload CharacterData.xml to import human characters from multiplayer games as bots
+
 ### Other tools
 
-- download gamesession.xml
-- drag edited gamesession.xml to dropzone to update loaded one
-- set current money
+-  change multiplayer campaign id (to resolve id conflicts)
+-  download gamesession.xml
+-  drag edited gamesession.xml to dropzone to update loaded one
+-  switch between single-player and multi-player save formats
+-  set current money
 
 <hr>
