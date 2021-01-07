@@ -183,8 +183,60 @@ body {
 	border: 3px solid white;
 	font-size: 20px;
 }
+
+.infoBoxLarge {
+	width: calc(100vw - 40px);
+	height: calc(100vh - 40px);
+	background: #2c2c2c;
+	border-radius: 10px;
+	padding: 10px;
+	box-shadow: 10px 10px 33px 8px rgba(0, 0, 0, 0.75);
+	margin: 0;
+	border: 3px solid white;
+	font-size: 20px;
+	position: fixed;
+	left: 10px;
+	top: 10px;
+}
+
+.infoBoxLarge .firstLineWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.infoBoxLarge .firstLineWrapper .closeButtonsWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.infoBoxLarge .firstLineWrapper .closeButtonsWrapper .savebutton {
+	margin-right: 20px;
+}
+
+.infoBoxLarge .firstLineWrapper .closeButtonsWrapper div {
+	cursor: pointer;
+	margin-right: 5px;
+	padding: 5px;
+	color: #bb86fc;
+	font-size: 1.2em;
+}
+
 .infoBox span {
 	color: #03dac6;
+}
+
+#jobSelect {
+	font-size: 1.2em;
+	font-weight: bold;
+	background: #2c2c2c;
+}
+
+#jobSelect option {
+	background: #2c2c2c;
 }
 
 .closeInfoBox {
@@ -195,6 +247,9 @@ body {
 	font-size: 2em;
 	color: #bb86fc;
 	cursor: pointer;
+}
+
+.savebutton {
 }
 
 #infoBox .text {
@@ -362,4 +417,10 @@ body {
 
 .idInputWrapper {
 	justify-content: flex-start;
+}
+
+.buttonWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 }

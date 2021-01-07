@@ -4,6 +4,7 @@ const fileReaderStream = require('filereader-stream')
 const concat = require('concat-stream')
 const $ = require('jquery')
 const { FILE } = require('dns')
+const { info } = require('console')
 
 var LOADED_FILES = {}
 var GAMESESSION = null
@@ -423,9 +424,7 @@ $('#idConfirm').on('click', () => {
 
 // convert save file
 $('#convertSaveButton').on('click', () => {
-	let warningString = MULTIPLAYER
-		? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots or that save might get bricked.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
-		: `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAlso after converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
+	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots or that save might get bricked.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort` : `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAlso after converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nYou can never know when something will go wrong - make sure to check if converted savefile works before removing original one.\n\nPress OK to continue, press Cancel to abort`
 
 	let confirm = window.confirm(warningString)
 	if (confirm === false) {
@@ -492,10 +491,14 @@ function updateCrewList() {
 		var job = $(this).find('job').attr('identifier')
 
 		var nameLabel = $(`<div class="name ${job}">${name}</div>`)
+		var buttonWrapper = $(`<div class="buttonWrapper"></div>`)
+		var editButton = $('<div class="deleteButton">Edit</div>')
 		var deleteButton = $('<div class="deleteButton">X</div>')
 		var listEl = $('<div class="crewListElement subListElement"></div>')
 		listEl.append(nameLabel)
-		listEl.append(deleteButton)
+		buttonWrapper.append(editButton)
+		buttonWrapper.append(deleteButton)
+		listEl.append(buttonWrapper)
 		listEl.appendTo($('#crewListWrapper'))
 
 		deleteButton.on('click', () => {
@@ -504,7 +507,68 @@ function updateCrewList() {
 			listEl.remove()
 			showMsg(`Removed character <span>${name}</span>`)
 		})
+
+		editButton.on('click', () => {
+			editCrewmemberBox($(this))
+		})
 	})
+}
+
+function editCrewmemberBox(character) {
+	var name = character.attr('name')
+	var job = character.find('job')
+	var jobID = job.attr('identifier')
+
+	var infobox = $(`<div class="infoBoxLarge"></div>`)
+
+	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Editing <span class="${jobID}">${name}</span></h2></div>`)
+	firstLineWrapper.appendTo(infobox)
+
+	var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
+	closeButtonsWrapper.appendTo(firstLineWrapper)
+
+	var saveButton = $('<div class="savebutton">Save</div>')
+	saveButton.appendTo(closeButtonsWrapper)
+
+	var close = $(`<div class=closeButton>X</div>`)
+	close.appendTo(closeButtonsWrapper)
+
+	var textWrapper = $(`<div class="mainBoxWrapper"></div>`)
+	textWrapper.appendTo(infobox)
+
+	var jobWrapper = $(`<div class="jobWrapper"><h3>Job</h3></div>`)
+	jobWrapper.appendTo(textWrapper)
+
+	var jobSelect = $(`<select name="job" id="jobSelect" class="${jobID}">
+    <option class="captain" value="captain">Captain</option>
+    <option class="securityofficer" value="securityofficer">Security Officer</option>
+    <option class="medicaldoctor" value="medicaldoctor">Medical Doctor</option>
+    <option class="engineer" value="engineer">Engineer</option>
+    <option class="mechanic" value="mechanic">Mechanic</option>
+    <option class="assistant" value="assistant">Assistant</option>
+  </select>`)
+	jobSelect.val(jobID)
+	jobSelect.appendTo(jobWrapper)
+
+	var madechange = false
+
+	jobSelect.on('change', function () {
+		var val = $(this).val()
+		console.log(val)
+		$(this).removeClass()
+		$(this).addClass(val)
+		madechange = true
+	})
+
+	saveButton.on('click', () => {
+		if (!madechange) return close.trigger('click')
+	})
+
+	close.on('click', () => {
+		close.off('click')
+		infobox.remove()
+	})
+	$(document.body).append(infobox)
 }
 // #endregion crew list
 
