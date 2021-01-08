@@ -14585,6 +14585,49 @@ function editCrewmemberBox(character) {
 
 	$(document.body).append(infobox)
 }
+
+$('#addCrewMember').on('click', () => {
+	var infobox = $(`<div class="infoBoxLarge"></div>`)
+
+	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Adding Crewmate</span></h2></div>`)
+	firstLineWrapper.appendTo(infobox)
+
+	var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
+	closeButtonsWrapper.appendTo(firstLineWrapper)
+
+	var saveButton = $('<div class="savebutton">Add</div>')
+	saveButton.appendTo(closeButtonsWrapper)
+	saveButton.on('click', () => {
+		var xmlString = textArea.val()
+		try {
+			var xml = $.parseXML(xmlString)
+			var character = $(xml).find('Character')
+			var name = character.attr('name')
+		} catch {
+			return window.alert(`Faled to parse the xml.`)
+		}
+		console.log(`Adding new character ${name}`)
+
+		var crew = GAMESESSION.find(MULTIPLAYER ? 'bots' : 'crew')
+		crew.append(character)
+		infobox.remove()
+		updateCrewList()
+		showMsg(`Added new character <span>${name}</span>`)
+	})
+
+	var close = $(`<div class=closeButton>X</div>`)
+	close.appendTo(closeButtonsWrapper)
+	close.on('click', () => {
+		infobox.remove()
+	})
+
+	var textWrapper = $(`<div class="mainWrapper"><div class="desc">Add new character to crew by pasting its xml below. You can get character xml string from gamesession.xml or using "copy xml to clipboard" button in character editor screen.</div></div>`)
+	textWrapper.appendTo(infobox)
+	var textArea = $(`<textarea class="charXmlInput" spellcheck="false"></textarea>`)
+	textArea.appendTo(textWrapper)
+
+	$(document.body).append(infobox)
+})
 // #endregion crew list
 
 // #endregion tools

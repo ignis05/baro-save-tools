@@ -271,6 +271,14 @@ body {
 	border-color: #bb86fc;
 }
 
+.infoBoxLarge .mainWrapper {
+	height: 70%
+}
+.infoBoxLarge .charXmlInput {
+	width: 100%;
+	height: 100%;
+}
+
 #jobSelect {
 	font-size: 1.2em;
 	background: #2c2c2c;
@@ -411,9 +419,13 @@ body {
 	margin-top: 10px;
 	cursor: pointer;
 	color: #bb86fc;
-	border: 1px solid #bb86fc;
+	border: 1px solid white;
 	padding: 2px;
 	text-align: center;
+}
+
+#convertSaveButton:hover {
+	border-color: #bb86fc;
 }
 
 .optionWrapper:nth-child(n + 2) {
@@ -464,4 +476,17 @@ body {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
+}
+
+#crewList #addCrewMember {
+	margin-top: 10px;
+	cursor: pointer;
+	color: #bb86fc;
+	border: 1px solid white;
+	padding: 2px;
+	text-align: center;
+}
+
+#crewList #addCrewMember:hover {
+	border-color: #bb86fc;
 }
