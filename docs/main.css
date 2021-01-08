@@ -184,6 +184,10 @@ body {
 	font-size: 20px;
 }
 
+.infoBox span {
+	color: #03dac6;
+}
+
 .infoBoxLarge {
 	width: calc(100vw - 40px);
 	height: calc(100vh - 40px);
@@ -225,13 +229,38 @@ body {
 	font-size: 1.2em;
 }
 
-.infoBox span {
-	color: #03dac6;
+.infoBoxLarge .detailWrapper input {
+	background: #2c2c2c;
+	font-size: 1.2em;
+}
+
+.infoBoxLarge .mainBoxWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.infoBoxLarge .mainBoxWrapper > div {
+	margin: 0 20px 10px;
+	border: 1px solid white;
+	background: #ffffff0c;
+	border-radius: 15px;
+	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.infoBoxLarge .mainBoxWrapper > div > h3 {
+	margin: 0 0 5px 5px;
 }
 
 #jobSelect {
 	font-size: 1.2em;
-	font-weight: bold;
 	background: #2c2c2c;
 }
 

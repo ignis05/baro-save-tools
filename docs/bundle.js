@@ -14465,14 +14465,35 @@ function updateCrewList() {
 	})
 }
 
+var jobName = jobid => {
+	switch (jobid) {
+		case 'captain':
+			return 'Captain'
+		case 'securityofficer':
+			return 'Security Officer'
+		case 'medicaldoctor':
+			return 'Medical Doctor'
+		case 'engineer':
+			return 'Engineer'
+		case 'mechanic':
+			return 'Mechanic'
+		case 'assistant':
+			return 'Assistant'
+		default:
+			return 'undefined'
+	}
+}
+
 function editCrewmemberBox(character) {
 	var name = character.attr('name')
 	var job = character.find('job')
 	var jobID = job.attr('identifier')
 
+	var madechange = false
+
 	var infobox = $(`<div class="infoBoxLarge"></div>`)
 
-	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Editing <span class="${jobID}">${name}</span></h2></div>`)
+	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Editing Crewmate</span></h2></div>`)
 	firstLineWrapper.appendTo(infobox)
 
 	var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
@@ -14480,13 +14501,42 @@ function editCrewmemberBox(character) {
 
 	var saveButton = $('<div class="savebutton">Save</div>')
 	saveButton.appendTo(closeButtonsWrapper)
+	saveButton.on('click', () => {
+		if (!madechange) return infobox.remove()
+
+		// name
+		character.attr('name', charNameInput.val())
+
+		// job
+		var job_id = jobSelect.val()
+		job.attr('name', jobName(job_id))
+		job.attr('identifier', job_id)
+
+		infobox.remove()
+		updateCrewList()
+	})
 
 	var close = $(`<div class=closeButton>X</div>`)
 	close.appendTo(closeButtonsWrapper)
+	close.on('click', () => {
+		infobox.remove()
+	})
 
 	var textWrapper = $(`<div class="mainBoxWrapper"></div>`)
 	textWrapper.appendTo(infobox)
 
+	//  name, looks
+	var detailWrapper = $(`<div class="detailWrapper"><h3>General</h3></div>`)
+	detailWrapper.appendTo(textWrapper)
+
+	var charNameInput = $(`<input type="text" class="${jobID}"/>`)
+	charNameInput.appendTo(detailWrapper)
+	charNameInput.val(name)
+	charNameInput.on('input', () => {
+		madechange = true
+	})
+
+	// job, skills
 	var jobWrapper = $(`<div class="jobWrapper"><h3>Job</h3></div>`)
 	jobWrapper.appendTo(textWrapper)
 
@@ -14500,25 +14550,17 @@ function editCrewmemberBox(character) {
   </select>`)
 	jobSelect.val(jobID)
 	jobSelect.appendTo(jobWrapper)
+	jobSelect.on('change', () => {
+		var val = jobSelect.val()
+		// role colors
+		jobSelect.removeClass()
+		jobSelect.addClass(val)
+		charNameInput.removeClass()
+		charNameInput.addClass(val)
 
-	var madechange = false
-
-	jobSelect.on('change', function () {
-		var val = $(this).val()
-		console.log(val)
-		$(this).removeClass()
-		$(this).addClass(val)
 		madechange = true
 	})
 
-	saveButton.on('click', () => {
-		if (!madechange) return close.trigger('click')
-	})
-
-	close.on('click', () => {
-		close.off('click')
-		infobox.remove()
-	})
 	$(document.body).append(infobox)
 }
 // #endregion crew list
