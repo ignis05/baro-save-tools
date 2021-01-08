@@ -14489,6 +14489,16 @@ function editCrewmemberBox(character) {
 	var job = character.find('job')
 	var jobID = job.attr('identifier')
 
+	var saveChanges = () => {
+		// name
+		character.attr('name', charNameInput.val())
+
+		// job
+		var job_id = jobSelect.val()
+		job.attr('name', jobName(job_id))
+		job.attr('identifier', job_id)
+	}
+
 	var madechange = false
 
 	var infobox = $(`<div class="infoBoxLarge"></div>`)
@@ -14503,17 +14513,10 @@ function editCrewmemberBox(character) {
 	saveButton.appendTo(closeButtonsWrapper)
 	saveButton.on('click', () => {
 		if (!madechange) return infobox.remove()
-
-		// name
-		character.attr('name', charNameInput.val())
-
-		// job
-		var job_id = jobSelect.val()
-		job.attr('name', jobName(job_id))
-		job.attr('identifier', job_id)
-
+		saveChanges()
 		infobox.remove()
 		updateCrewList()
+		showMsg(`Updated crewmate <span>${character.attr('name')}</span>`)
 	})
 
 	var close = $(`<div class=closeButton>X</div>`)
@@ -14525,9 +14528,28 @@ function editCrewmemberBox(character) {
 	var textWrapper = $(`<div class="mainBoxWrapper"></div>`)
 	textWrapper.appendTo(infobox)
 
-	//  name, looks
+	//  name, looks, export
 	var detailWrapper = $(`<div class="detailWrapper"><h3>General</h3></div>`)
 	detailWrapper.appendTo(textWrapper)
+
+	var copyButton = $(`<div class="copyButton">Copy xml to clipboard</div>`)
+	copyButton.appendTo(detailWrapper)
+	copyButton.on('click', () => {
+		saveChanges()
+		var text = character.prop('outerHTML')
+		navigator.clipboard
+			.writeText(text)
+			.then(() => {
+				console.log('Copied string to clipboard')
+				copyButton.text('Copied!')
+				setTimeout(() => {
+					copyButton.text('Copy xml to clipboard')
+				}, 3000)
+			})
+			.catch(err => {
+				console.log('Failed to copy string to clipboard')
+			})
+	})
 
 	var charNameInput = $(`<input type="text" class="${jobID}"/>`)
 	charNameInput.appendTo(detailWrapper)

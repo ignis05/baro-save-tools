@@ -259,6 +259,18 @@ body {
 	margin: 0 0 5px 5px;
 }
 
+.infoBoxLarge .copyButton {
+	padding: 5px;
+	border: 1px solid white;
+	color: #bb86fc;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+
+.infoBoxLarge .copyButton:hover {
+	border-color: #bb86fc;
+}
+
 #jobSelect {
 	font-size: 1.2em;
 	background: #2c2c2c;
