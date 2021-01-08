@@ -14551,6 +14551,20 @@ function editCrewmemberBox(character) {
 			})
 	})
 
+	var rawXmlEdit = $(`<div class="copyButton">Edit raw xml</div>`)
+	rawXmlEdit.appendTo(detailWrapper)
+	rawXmlEdit.on('click', () => {
+		saveChanges()
+		console.log('opening raw character xml')
+		rawCharacterXmlEdit(character).then(newCharacter => {
+			if (newCharacter === false) return
+			// reload character edit popup
+			infobox.remove()
+			updateCrewList()
+			editCrewmemberBox(newCharacter)
+		})
+	})
+
 	var charNameInput = $(`<input type="text" class="${jobID}"/>`)
 	charNameInput.appendTo(detailWrapper)
 	charNameInput.val(name)
@@ -14584,6 +14598,50 @@ function editCrewmemberBox(character) {
 	})
 
 	$(document.body).append(infobox)
+}
+
+function rawCharacterXmlEdit(character) {
+	return new Promise(resolve => {
+		var infobox = $(`<div class="infoBoxLarge"></div>`)
+
+		var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Editing Character</span></h2></div>`)
+		firstLineWrapper.appendTo(infobox)
+
+		var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
+		closeButtonsWrapper.appendTo(firstLineWrapper)
+
+		var saveButton = $('<div class="savebutton">Save</div>')
+		saveButton.appendTo(closeButtonsWrapper)
+		saveButton.on('click', () => {
+			var xmlString = textArea.val()
+			try {
+				var xml = $.parseXML(xmlString)
+				var newCharacter = $(xml).find('Character')
+				var name = newCharacter.attr('name')
+			} catch {
+				return window.alert(`Faled to parse the xml.`)
+			}
+			console.log(`Saving changes to character ${name}`)
+			character.replaceWith(newCharacter)
+			infobox.remove()
+			resolve(newCharacter)
+		})
+
+		var close = $(`<div class=closeButton>X</div>`)
+		close.appendTo(closeButtonsWrapper)
+		close.on('click', () => {
+			infobox.remove()
+			resolve(false)
+		})
+
+		var textWrapper = $(`<div class="mainWrapper"><div class="desc">Edit raw character data in xml format.</div></div>`)
+		textWrapper.appendTo(infobox)
+		var textArea = $(`<textarea class="charXmlInput" spellcheck="false"></textarea>`)
+		textArea.appendTo(textWrapper)
+		textArea.val(character.prop('outerHTML'))
+
+		$(document.body).append(infobox)
+	})
 }
 
 $('#addCrewMember').on('click', () => {

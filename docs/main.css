@@ -227,6 +227,16 @@ body {
 	padding: 5px;
 	color: #bb86fc;
 	font-size: 1.2em;
+	border: 1px solid white;
+}
+
+.infoBoxLarge .firstLineWrapper .closeButtonsWrapper div:hover {
+	border-color: #bb86fc;
+}
+
+.infoBoxLarge .firstLineWrapper .closeButtonsWrapper .closeButton {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .infoBoxLarge .detailWrapper input {
@@ -272,7 +282,7 @@ body {
 }
 
 .infoBoxLarge .mainWrapper {
-	height: 70%
+	height: calc(100% - 120px);
 }
 .infoBoxLarge .charXmlInput {
 	width: 100%;
