@@ -244,6 +244,23 @@ body {
 	font-size: 1.2em;
 }
 
+.infoBoxLarge .jobWrapper .skillSliderWrapper {
+	margin-top: 10px;
+}
+
+.infoBoxLarge .jobWrapper .skillSliderWrapper .label {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.infoBoxLarge .jobWrapper .skillSliderWrapper input[type='number'] {
+	width: 80px;
+}
+.infoBoxLarge .jobWrapper .skillSliderWrapper input[type='range'] {
+	width: 100%;
+}
+
 .infoBoxLarge .mainBoxWrapper {
 	display: flex;
 	flex-direction: row;
@@ -265,7 +282,7 @@ body {
 	align-items: flex-start;
 }
 
-.infoBoxLarge .mainBoxWrapper > div > h3 {
+.infoBoxLarge .mainBoxWrapper > div h3 {
 	margin: 0 0 5px 5px;
 }
 

@@ -14497,6 +14497,13 @@ function editCrewmemberBox(character) {
 		var job_id = jobSelect.val()
 		job.attr('name', jobName(job_id))
 		job.attr('identifier', job_id)
+
+		// skills
+		job.find('skill').each(function () {
+			var skill = $(this)
+			var id = skill.attr('identifier')
+			skill.attr('level', sliders[id].val())
+		})
 	}
 
 	var madechange = false
@@ -14565,6 +14572,7 @@ function editCrewmemberBox(character) {
 		})
 	})
 
+	detailWrapper.append(`<h3>Name:</h3>`)
 	var charNameInput = $(`<input type="text" class="${jobID}"/>`)
 	charNameInput.appendTo(detailWrapper)
 	charNameInput.val(name)
@@ -14596,6 +14604,46 @@ function editCrewmemberBox(character) {
 
 		madechange = true
 	})
+
+	var skillSliderWrapper = $(`<div class="skillSliderWrapper"><h3>Skills</h3></div>`)
+	skillSliderWrapper.appendTo(jobWrapper)
+
+	var sliders = {}
+
+	var wrappers = {}
+
+	job.find('skill').each(function () {
+		var skill = $(this)
+		var id = skill.attr('identifier')
+		var level = skill.attr('level')
+
+		var wrapper = $(`<div class="sliderWrapper"></div>`)
+		wrappers[id] = wrapper
+
+		var label = $(`<div class="label">${id}:</div>`)
+		label.appendTo(wrapper)
+
+		var input = $(`<input type="number" min="0" max="100" step="1"/>`)
+		input.val(level)
+		input.appendTo(label)
+		input.on('change', () => {
+			sliders[id].val(input.val())
+			madechange = true
+		})
+
+		sliders[id] = $(`<input type="range" min="0" max="100" step="0.000001"/>`)
+		sliders[id].appendTo(wrapper)
+		sliders[id].val(level)
+		sliders[id].on('input', () => {
+			input.val(sliders[id].val())
+			madechange = true
+		})
+		sliders[id]
+	})
+	// force sliders to be in order
+	for (let skillname of ['helm', 'weapons', 'mechanical', 'electrical', 'medical']) {
+		wrappers[skillname].appendTo(skillSliderWrapper)
+	}
 
 	$(document.body).append(infobox)
 }
