@@ -25,8 +25,10 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 ### Current crew list
 
 -  shows list of AI crewmates
+-  edit character's name, job, skills or raw xml
 -  remove crewmates with "X" button
 -  upload CharacterData.xml to import human characters from multiplayer games as bots
+-  import new character from xml data
 
 ### Other tools
 
