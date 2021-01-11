@@ -17009,7 +17009,9 @@ $('#idConfirm').on('click', () => {
 
 // convert save file
 $('#convertSaveButton').on('click', () => {
-	let warningString = MULTIPLAYER ? `WARNING: after converting savefile to singleplayer type all human controlled characters will be lost.\nMake sure you have some bots before downloading or that save might get bricked.\n\nYou can never know when something will go wrong - make sure to check if the converted savefile works before removing the original one.\n\nPress OK to continue, press Cancel to abort` : `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAfter converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nYou can never know when something will go wrong - make sure to check if the converted savefile works before removing the original one.\n\nPress OK to continue, press Cancel to abort`
+	let warningString = MULTIPLAYER
+		? `WARNING: for multiplayer saves player controlled characters are saved separately.\nMake sure you have some bots, or that you import your CharacterData.xml before downloading or that save might get bricked.\n\nYou can never know when something will go wrong - make sure to check if the converted savefile works before removing the original one.\n\nPress OK to continue, press Cancel to abort`
+		: `WARNING: after converting savefile to multiplayer current crew will become AI crew.\nAfter converting make sure that campaign id (randomly generated) is not already used in your other campaign saves.\n\nYou can never know when something will go wrong - make sure to check if the converted savefile works before removing the original one.\n\nPress OK to continue, press Cancel to abort`
 
 	let confirm = window.confirm(warningString)
 	if (confirm === false) {
