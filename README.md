@@ -30,6 +30,7 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 -  remove crewmates with "X" button
 -  upload CharacterData.xml to import human characters from multiplayer games as bots
 -  import new character from xml data
+-  change crew order
 
 ### Other tools
 

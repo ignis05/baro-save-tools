@@ -375,7 +375,7 @@ body {
 	text-align: center;
 }
 
-.subList .subListElement {
+.subListWrapper .subListElement {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
@@ -514,7 +514,11 @@ body {
 	justify-content: flex-end;
 }
 
-#crewList #addCrewMember {
+#crewList #sortCrewList {
+	margin-bottom: 10px;
+}
+
+#crewList .crewListButton {
 	margin-top: 10px;
 	cursor: pointer;
 	color: #bb86fc;
@@ -523,6 +527,31 @@ body {
 	text-align: center;
 }
 
-#crewList #addCrewMember:hover {
+#crewList .crewListButton:hover {
 	border-color: #bb86fc;
+}
+
+.crewReorderWrapper {
+	width: auto;
+}
+
+.crewReorderWrapper .crewReorderElement {
+	justify-content: flex-end;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
+
+.crewReorderWrapper .crewReorderElement .name {
+	margin-left: 20px;
+}
+
+.crewReorderWrapper .crewReorderElement .deleteButton {
+	border: 1px solid #bb86fc;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 3px;
+	font-weight: bold;
 }

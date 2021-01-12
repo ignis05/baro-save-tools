@@ -480,13 +480,13 @@ $('#convertSaveButton').on('click', () => {
 
 // #region crew list
 function updateCrewList() {
-	// singleplayer
-	var crew = GAMESESSION.find('crew')
-
-	// multiplayer
-	if (crew.length < 1) crew = GAMESESSION.find('bots')
+	var crew = GAMESESSION.find(MULTIPLAYER ? 'bots' : 'crew')
 
 	$('.crewListElement').remove()
+
+	console.log(crew.find('Character').length)
+	if (crew.find('Character').length < 2) $('#sortCrewList').hide()
+	else $('#sortCrewList').show()
 
 	crew.find('Character').each(function () {
 		var name = $(this).attr('name')
@@ -515,6 +515,65 @@ function updateCrewList() {
 		})
 	})
 }
+
+// reorder crew
+$('#sortCrewList').on('click', () => {
+	var crew = GAMESESSION.find(MULTIPLAYER ? 'bots' : 'crew')
+	var madechange = false
+
+	var infobox = $(`<div class="infoBoxLarge"></div>`)
+
+	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Change crew order</span></h2></div>`)
+	firstLineWrapper.appendTo(infobox)
+
+	var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
+	closeButtonsWrapper.appendTo(firstLineWrapper)
+
+	var saveButton = $('<div class="savebutton">Close</div>')
+	saveButton.appendTo(closeButtonsWrapper)
+	saveButton.on('click', () => {
+		if (!madechange) return infobox.remove()
+		infobox.remove()
+		updateCrewList()
+		showMsg(`Reordered crew list`)
+	})
+
+	var textWrapper = $(`<div class="subListWrapper crewReorderWrapper"></div>`)
+	textWrapper.appendTo(infobox)
+
+	crew.find('Character').each(function () {
+		var character = $(this)
+		var name = character.attr('name')
+		var job = character.find('job').attr('identifier')
+
+		var nameLabel = $(`<div class="name ${job}">${name}</div>`)
+		var buttonWrapper = $(`<div class="buttonWrapper"></div>`)
+		var upArrow = $('<div class="deleteButton">&uarr;</div>')
+		var downArrow = $('<div class="deleteButton">&darr;</div>')
+		var listEl = $('<div class="subListElement crewReorderElement"></div>')
+		listEl.append(nameLabel)
+		buttonWrapper.append(upArrow)
+		buttonWrapper.append(downArrow)
+		listEl.append(buttonWrapper)
+		listEl.appendTo(textWrapper)
+
+		downArrow.on('click', () => {
+			//move element down one step
+			if (listEl.not(':last-child')) listEl.next().after(listEl)
+			if (character.not(':last-child')) character.next().after(character)
+			madechange = true
+		})
+
+		upArrow.on('click', () => {
+			//move element up one step
+			if (listEl.not(':first-child')) listEl.prev().before(listEl)
+			if (character.not(':first-child')) character.prev().before(character)
+			madechange = true
+		})
+	})
+
+	$(document.body).append(infobox)
+})
 
 var jobName = jobid => {
 	switch (jobid) {
