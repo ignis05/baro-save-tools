@@ -407,6 +407,12 @@ body {
 	margin-left: 10px;
 }
 
+#editGamesession {
+	color: #bb86fc;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
 .adderWrapper {
 	padding-top: 10px;
 	width: 100%;

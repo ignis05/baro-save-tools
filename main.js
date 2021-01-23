@@ -366,7 +366,7 @@ function updateOwnedSubs() {
 			var name = $(this).attr('name')
 			var radio = $(`<input type="radio" name="selectedOwnedSub" value="${name}" ${name == selectedSub ? 'checked' : ''}/>`)
 			var nameLabel = $(`<div class="name">${name}</div>`)
-			var download = $('<img class="downloadImg" src="./res/download.svg" alt="download" />')
+			var download = $('<img class="downloadImg" src="./res/download.svg" alt="download" title="download"/>')
 			var delButton = $('<div class="deleteButton">X</div>')
 			var listEl = $('<div class="ownedSubListElement subListElement"></div>')
 			listEl.append(radio)
@@ -408,6 +408,50 @@ function updateOwnedSubs() {
 // #endregion owned submarines list
 
 // #region other tools
+
+// edit gamesession.xml
+$('#editGamesession').on('click', () => {
+	var infobox = $(`<div class="infoBoxLarge"></div>`)
+
+	var firstLineWrapper = $(`<div class=firstLineWrapper><h2>Editing gamesession.xml</span></h2></div>`)
+	firstLineWrapper.appendTo(infobox)
+
+	var closeButtonsWrapper = $(`<div class=closeButtonsWrapper></div>`)
+	closeButtonsWrapper.appendTo(firstLineWrapper)
+
+	var saveButton = $('<div class="savebutton">Save</div>')
+	saveButton.appendTo(closeButtonsWrapper)
+	saveButton.on('click', () => {
+		var xmlString = textArea.val()
+		try {
+			var xml = $.parseXML(xmlString)
+			let tempG = $(xml).find('Gamesession')
+			if (GAMESESSION.length < 1) return window.alert('Failed to read gamesession.xml')
+			GAMESESSION = tempG
+		} catch {
+			return window.alert(`Faled to parse the xml.`)
+		}
+		loadGameSession()
+		console.log(`Saving changes to gamesession.xml`)
+		infobox.remove()
+	})
+
+	var close = $(`<div class=closeButton>X</div>`)
+	close.appendTo(closeButtonsWrapper)
+	close.on('click', () => {
+		infobox.remove()
+		resolve(false)
+	})
+
+	var textWrapper = $(`<div class="mainWrapper"><div class="desc">Edit raw save data in xml format.</div></div>`)
+	textWrapper.appendTo(infobox)
+	var textArea = $(`<textarea class="charXmlInput" spellcheck="false"></textarea>`)
+	textArea.appendTo(textWrapper)
+	textArea.val(GAMESESSION.prop('outerHTML'))
+
+	$(document.body).append(infobox)
+})
+
 $('#moneyConfirm').on('click', () => {
 	let money = $('#moneyInput').val()
 	CAMPAIGN.attr('money', money)
