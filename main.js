@@ -3,8 +3,6 @@ const drop = require('drag-and-drop-files')
 const fileReaderStream = require('filereader-stream')
 const concat = require('concat-stream')
 const $ = require('jquery')
-const { FILE } = require('dns')
-const { info } = require('console')
 
 var LOADED_FILES = {}
 var GAMESESSION = null
@@ -364,7 +362,7 @@ function updateOwnedSubs() {
 		.find('sub')
 		.each(function () {
 			var name = $(this).attr('name')
-			var radio = $(`<input type="radio" name="selectedOwnedSub" value="${name}" ${name == selectedSub ? 'checked' : ''}/>`)
+			var radio = $(`<input type="radio" title="Set as currently selected submarine" name="selectedOwnedSub" value="${name}" ${name == selectedSub ? 'checked' : ''}/>`)
 			var nameLabel = $(`<div class="name">${name}</div>`)
 			var download = $('<img class="downloadImg" src="./res/download.svg" alt="download" title="download"/>')
 			var delButton = $('<div class="deleteButton">X</div>')
@@ -405,6 +403,34 @@ function updateOwnedSubs() {
 			})
 		})
 }
+
+// clean dirt
+$('#cleanDirt').on('click', () => {
+	for (let subfile of Object.values(SUBFILEMAP)) {
+		var output = zlib.gunzipSync(LOADED_FILES[subfile]).toString('utf-8')
+		var submarine = $($.parseXML(output)).find('Submarine')
+		var cleanedCount = 0
+		submarine.find('Hull').each(function () {
+			var hull = $(this)
+			if (hull.attr('backgroundsections') !== '') {
+				hull.attr('backgroundsections', '')
+				cleanedCount++
+			}
+		})
+		console.log(`Cleaned ${cleanedCount} hulls in ${subfile}`)
+		showMsg(`Cleaned <span>${cleanedCount}</span> rooms in <span>${subfile}</span>`)
+
+		if (!cleanedCount) {
+			console.log('nothing changed, not saving')
+			continue
+		}
+
+		var string = submarine.prop('outerHTML')
+		var compressed = zlib.gzipSync(string)
+		LOADED_FILES[subfile] = compressed
+		console.log('saved properly')
+	}
+})
 // #endregion owned submarines list
 
 // #region other tools

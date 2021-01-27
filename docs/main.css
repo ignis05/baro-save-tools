@@ -397,8 +397,8 @@ body {
 	margin-left: 20px;
 }
 
-.ownedSubListElement,
-.avalSubListElement {
+#ownedSubListWrapper input[type=radio]{
+	cursor: pointer;
 }
 
 .subListElement .deleteButton {
@@ -524,7 +524,7 @@ body {
 	margin-bottom: 10px;
 }
 
-#crewList .crewListButton {
+.crewListButton {
 	margin-top: 10px;
 	cursor: pointer;
 	color: #bb86fc;
@@ -533,7 +533,7 @@ body {
 	text-align: center;
 }
 
-#crewList .crewListButton:hover {
+.crewListButton:hover {
 	border-color: #bb86fc;
 }
 

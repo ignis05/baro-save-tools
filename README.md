@@ -15,6 +15,7 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 -  remove owned submarine with "X" button
 -  download .sub file of owned submarine with download button
 -  change currently used submarine using radio buttons
+-  clean all dirt and stains from owned submarines
 
 ### Available Submarines List
 
@@ -35,6 +36,7 @@ Master branch hosted on https://ignis05.github.io/baro-save-tools/index.html
 ### Other tools
 
 -  change multiplayer campaign id (to resolve id conflicts)
+-  directly edit raw gamesession.xml
 -  download gamesession.xml
 -  upload edited gamesession.xml to replace the loaded one
 -  switch between single-player and multi-player save formats
